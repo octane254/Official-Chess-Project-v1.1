@@ -10,7 +10,7 @@ function ChessBoard (){
     const columns =["a","b","c","d","e","f","g","h"]
 
     const [pieces, setPieces] =useState({}) // initial state is an empty object 
-    
+
 
     // for positioning the the pieces in the board 
 
@@ -46,6 +46,12 @@ function ChessBoard (){
 
     },[])
 
+    // function to render the pieces on the board
+
+    const renderpieces = ()=>{
+
+    
+
     let board = []
 
     // Loop to generate the tiles
@@ -57,17 +63,17 @@ function ChessBoard (){
             const tilecolors = (i+j)%2
             const position = `${columns[j]}${rows[i]}`
             
-            // store tileclass variable as undifined to allow the tiles to be looped in different colors in the board 
+            // store tileclass variable as undifined to allow the tiles for it to change color with specified validation 
 
             let tileclass;
 
             if(tilecolors === 0){
 
-                tileclass = "white-color"  // To Add the class in css to display a white tile 
+                tileclass = "white-color" 
             }
             else{
 
-                tileclass = "blue-color" // To Add class in css to display a blue tile 
+                tileclass = "blue-color"  
             }
 
             // Add Tiles to the board 
@@ -80,8 +86,9 @@ function ChessBoard (){
                 className={`tile ${tileclass}`}
 
                 >
+                    <ChessPieces piece={pieces[position]} />                    
 
-                [{columns[j]}{rows[i]}]
+                <div className="coordinates">[{position}]</div>
 
                 </div>
 
@@ -90,10 +97,12 @@ function ChessBoard (){
         }
     }
 
+        return board
+}
         return (
 
-            <div className="chessboard">
-                {board}
+            <div className="chessBoard">
+                {renderpieces()}
             </div>
         )
 
