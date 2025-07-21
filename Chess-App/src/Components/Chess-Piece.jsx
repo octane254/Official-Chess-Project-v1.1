@@ -38,7 +38,7 @@ function ChessPieces ({piece}){
         
         piece && <img
 
-        src={ChessPieces[piece]}
+        src={pieceImages[piece]}
         alt={piece} 
         
         />
