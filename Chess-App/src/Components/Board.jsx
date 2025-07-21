@@ -1,3 +1,5 @@
+import "../Css/Board.css"
+
 function ChessBoard (){
     
     // Arrays for the files and ranks in chess
