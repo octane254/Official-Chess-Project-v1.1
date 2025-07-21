@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import ChessPieces from "./Chess-Piece"
 import "../Css/Board.css"
 
 function ChessBoard (){
@@ -101,7 +102,7 @@ function ChessBoard (){
 }
         return (
 
-            <div className="chessBoard">
+            <div className="chessboard">
                 {renderpieces()}
             </div>
         )
