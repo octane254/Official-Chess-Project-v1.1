@@ -4,3 +4,12 @@ body{
   color: #1a1a2e;
 
 }
+
+.chessboard{
+
+    width: 800px;
+    height:800px;
+    display: flex;
+    flex-wrap: wrap;
+
+}

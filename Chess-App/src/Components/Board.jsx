@@ -56,7 +56,7 @@ function ChessBoard (){
 
         return (
 
-            <div>
+            <div className="chessboard">
                 {board}
             </div>
         )
