@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import "../Css/Board.css"
 
 function ChessBoard (){
@@ -8,7 +9,42 @@ function ChessBoard (){
 
     const columns =["a","b","c","d","e","f","g","h"]
 
-    // tiles are going to be added in the empty Array 
+    const [pieces, setPieces] =useState({}) // initial state is an empty object 
+    
+
+    // for positioning the the pieces in the board 
+
+    useEffect(()=>{
+
+        // an empty object to store the pieces
+
+        const initialPieces = {}
+        const backRow=["rook","knight","bishop","queen","king","bishop", "knight","rook"]  // An array to organise the 8th and 1st ranks
+
+
+        // create a loop to place blue pieces in their required tiles  
+
+        columns.forEach((col,i) => {
+
+            initialPieces[`${col}8`] = `blue-${backRow[i]}`
+            initialPieces[`${col}7`] = `blue-pawn`
+
+
+        })
+        
+            // create a loop to place white pieces in their required tiles  
+
+        columns.forEach((col,i) => {
+
+            initialPieces[`${col}1`] = `white-${backRow[i]}`
+            initialPieces[`${col}2`] = `white-pawn`
+
+
+        })     
+        
+        setPieces(initialPieces)
+
+    },[])
 
     let board = []
 
