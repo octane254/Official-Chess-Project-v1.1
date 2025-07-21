@@ -19,7 +19,7 @@ function ChessBoard (){
 
             
             const tilecolors = (i+j)%2
-            const position = `${columns[j]} ${rows[i]}`
+            const position = `${columns[j]}${rows[i]}`
             
             // store tileclass variable as undifined to allow the tiles to be looped in different colors in the board 
 
