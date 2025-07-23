@@ -101,15 +101,34 @@ function Bishop({position, isSlected, onSelect, board, color}){
 
       if (isSquareEmpty(newX, newY)) {
         movements.push({ x: newX, y: newY, type: 'move' });
-        
+
       } else if (isEnemyPiece(newX, newY)) {
         movements.push({ x: newX, y: newY, type: 'capture' });
         break;
       } else {
         break;
       }
+
+       return movements;
     }
 
-    return movements;
+
+        // To be used in an an onclick event
+
+      const handleSelect = () => {
+        if (isSelected) {
+        onSelect(null, []);
+        } else {
+        const moves = calculateValidMoves();
+        onSelect(position, moves);
+        }
+    };
+    
+
+   
+
+
+
+
 }; 
 
