@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import ChessPieces from "./Chess-Piece"
 import "../Css/Board.css"
 
-function ChessBoard (){
+function ChessBoard ({ username }) {
     
     // Arrays for the files and ranks in chess
     
@@ -102,8 +102,13 @@ function ChessBoard (){
 }
         return (
 
-            <div className="chessboard">
-                {renderpieces()}
+            <div className="chessboard-container" style={{ display: "flex" }}>
+                <div className="welcome-message" style={{ marginRight: "20px", fontSize: "18px", fontWeight: "bold", alignSelf: "flex-start" }}>
+                    Welcome, {username}!
+                </div>
+                <div className="chessboard">
+                    {renderpieces()}
+                </div>
             </div>
         )
 
