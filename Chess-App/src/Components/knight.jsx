@@ -1,5 +1,5 @@
 import whiteKnight from '../assets/wn.png';
-import blueKnight from "../assets/bn.png";
+import blueKnight from "../assets/bn .png";
 
 function Knight({ position, isSelected, onSelect, board, color }) {
 

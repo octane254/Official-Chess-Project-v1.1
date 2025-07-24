@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../Css/Login.css";
-import chessImage from "../assets/wp (1).png";
+import chessImage from "../assets/wp.png";
 
 function Login({ onStart }) {
   const [name, setName] = useState("");

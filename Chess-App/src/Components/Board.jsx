@@ -124,73 +124,63 @@ const handleAITurn = () => {
   };
 
 
+   const boardState = getBoardState();
+
+
     // function to render the pieces on the board
 
-    const renderpieces = ()=>{
+  const renderBoard = () => {
 
-    
 
-    let board = []
+    const board = [];
 
-    // Loop to generate the tiles
-    
-    for (let i=0; i<rows.length; i++){
-        for(let j=0; j<columns.length; j++){
 
-            
-            const tilecolors = (i+j)%2
-            const position = `${columns[j]}${rows[i]}`
-            
-            // store tileclass variable as undifined to allow the tiles for it to change color with specified validation 
+    for (let y = 7; y >= 0; y--) {
 
-            let tileclass;
+      for (let x = 0; x < 8; x++) {
 
-            if(tilecolors === 0){
+        const key = coordKey(x, y);
 
-                tileclass = "white-color" 
-            }
-            else{
+        const tileColor = (x + y) % 2 === 0 ? "white-tiles" : "blue-tiles";
 
-                tileclass = "blue-color"  
-            }
+        const isSelectedTile = selectedPosition && selectedPosition.x === x && selectedPosition.y === y;
 
-            // Add Tiles to the board 
 
-            board.push(
+        const hasValidMove = validMoves.some(move => move.x === x && move.y === y);
 
-                <div
+        const moveType = hasValidMove
 
-                key={position}
-                className={`tile ${tileclass}`}
+          ? validMoves.find(move => move.x === x && move.y === y)?.type
+          : null;
 
-                >
-                    <ChessPieces piece={pieces[position]} />                    
+        board.push(
+          <div
+            key={key}
+            className={`tiles ${tileColor} ${hasValidMove ? "valid-move" : ""} ${isSelectedTile ? "selected-tile" : ""}`}
 
-                <div className="coordinates">[{position}]</div>
+            onClick={() => handleTileClick({ x, y })}
+          >
+            <ChessPieces
 
-                </div>
-
-            )
-
-        }
+              piece={pieces[key]}
+              position={{ x, y }}
+              board={boardState}
+              selectedPosition={selectedPosition}
+              validMoves={validMoves}
+              onSelect={handleSelectPiece}
+              onMove={handleMovePiece}
+            />
+            {hasValidMove && <div className={`move-indicator ${moveType}`} />}
+            <div className="coordinates">[{x},{y}]</div>
+          </div>
+        );
+      }
     }
 
-        return board
-}
-        return (
+    return board;
+  };
 
-            <div className="chessboard-container" style={{ display: "flex" }}>
-                <div className="welcome-message" style={{ marginRight: "20px", fontSize: "18px", fontWeight: "bold", alignSelf: "flex-start" }}>
-                    Welcome, {username}!
-                </div>
-                <div className="chessboard">
-                    {renderpieces()}
-                </div>
-            </div>
-        )
-
-
-
+  return <div className="chessboard">{renderBoard()}</div>;
 }
 
 export default ChessBoard
