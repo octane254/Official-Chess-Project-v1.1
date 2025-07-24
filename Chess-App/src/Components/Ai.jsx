@@ -15,3 +15,21 @@ function scoreMove(move, board) {
   if (!target) return 1; // quiet move
   return scorePoint[target.type] || 0;
 }
+
+export const makeRandomMove = (board, color) => {
+  const allMoves = getAllPossibleMoves(board, color).filter(move => {
+    const piece = board.find(p => p.x === move.from.x && p.y === move.from.y);
+    return piece && piece.color === color && move.from && move.to;
+  });
+
+  if (allMoves.length === 0) return null;
+
+  const scoredMoves = allMoves.map(move => ({
+    ...move,
+    score: scoreMove(move, board)
+  }));
+
+ 
+  const topMoves = scoredMoves
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
