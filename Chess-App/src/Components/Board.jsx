@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import ChessPieces from "./Chess-Piece"
 import "../Css/Board.css"
 import { makeRandomMove } from "./Ai";
+import compBackground from "../assets/jason-leung-1DjbGRDh7-E-unsplash.jpg"
+import playerBackground from "../assets/mesh-9iY3Sqr1UWY-unsplash.jpg";
 
 function ChessBoard ({ username }) {
     
@@ -191,7 +193,35 @@ const handleAITurn = () => {
     return board;
   };
 
-  return <div className="chessboard">{renderBoard()}</div>;
+  return (
+
+
+ <div className="game-container">
+
+  <div className="player-label top-player">
+
+     <img src={compBackground} alt="Computer" className="player-icon" />
+
+    <span className="player-tag">Player 2 (Computer)</span>
+    
+    </div>
+
+  
+  <div className="chessboard">
+    {renderBoard()}
+  </div>
+
+  
+  <div className="player-label bottom-player">
+
+    <img src={playerBackground} alt="Computer" className="player-icon" />
+
+    <span className="player-tag">player 1 (you)</span>
+    
+    </div>
+
+</div>
+  )
 }
 
 export default ChessBoard
