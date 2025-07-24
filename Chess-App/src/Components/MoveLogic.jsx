@@ -93,3 +93,26 @@ export const calculateValidBishopMoves = (position,board,color) => {
 
     return movements;
   };
+
+  export const calculateValidKingMoves = (position,board,color) => {
+    const movements = [];
+    const x = position.x;
+    const y = position.y;
+
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        if (dx === 0 && dy === 0) continue;
+
+        const newX = x + dx;
+        const newY = y + dy;
+
+        if (!isOnBoard(newX, newY)) continue;
+        if (isFriendlyPiece(newX, newY,board,color)) continue;
+
+        const type = isEnemyPiece(newX, newY,board,color) ? 'capture' : 'move';
+        movements.push({ x: newX, y: newY, type });
+      }
+    }
+
+    return movements;
+  };
