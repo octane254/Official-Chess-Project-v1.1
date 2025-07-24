@@ -59,9 +59,20 @@ function ChessBoard ({ username }) {
     });
 };
 
-const handleSelectPiece = (position, moves, piece) => {
+const handleSelectPiece = (position, moves) => {
+  if (!position) {
+    setSelectedPosition(null);
+    setValidMoves([]);
+    return;
+  }
 
-  if (!piece || piece.color !== turn) return; 
+  // Lookup actual piece color from board
+  const fromKey = coordKey(position.x, position.y);
+  const rawPiece = pieces[fromKey];
+  const [color] = rawPiece ? rawPiece.split("-") : [];
+
+  if (color !== turn) return;
+
   setSelectedPosition(position);
   setValidMoves(moves || []);
 };
