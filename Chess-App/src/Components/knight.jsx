@@ -14,7 +14,7 @@ function Knight({ position, isSelected, onSelect, board, color }) {
     const piece = board.find(p => p.x === x && p.y === y);
     return piece && piece.color !== color;
   };
-}
+
  const calculateValidMoves = () => {
     const movements = [];
     const x = position.x;
@@ -43,5 +43,33 @@ function Knight({ position, isSelected, onSelect, board, color }) {
 
     return movements;
   };
+
+
+   const handleSelect = () => {
+    if (isSelected) {
+      onSelect(null, []);
+    } else {
+      const moves = calculateValidMoves();
+      onSelect(position, moves);
+    }
+  };
+  return (
+    <div
+      className={`chessPiece knight-piece ${color} ${isSelected ? 'selected' : ''}`}
+      onClick={handleSelect}
+    >
+      <img
+        src={color === 'white' ? whiteKnight : blueKnight}
+        alt={`${color} knight`}
+        style={{
+          width: '70px',
+          height: '70px',
+          pointerEvents: 'none'
+        }}
+      />
+
+    </div>
+  );
+}
 
 
