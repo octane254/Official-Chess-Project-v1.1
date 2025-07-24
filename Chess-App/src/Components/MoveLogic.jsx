@@ -116,3 +116,32 @@ export const calculateValidBishopMoves = (position,board,color) => {
 
     return movements;
   };
+
+      export const calculateValidKnightMoves = (position,board,color) => {
+    const movements = [];
+    const x = position.x;
+    const y = position.y;
+
+    const jumps = [
+      { dx: 1, dy: 2 },
+      { dx: 2, dy: 1 },
+      { dx: -1, dy: 2 },
+      { dx: -2, dy: 1 },
+      { dx: 1, dy: -2 },
+      { dx: 2, dy: -1 },
+      { dx: -1, dy: -2 },
+      { dx: -2, dy: -1 },
+    ];                            
+    for (let i = 0; i < jumps.length; i++) {
+      const newX = x + jumps[i].dx;
+      const newY = y + jumps[i].dy;
+      if (!isOnBoard(newX, newY)) continue;
+
+      if (isFriendlyPiece(newX, newY,board,color)) continue;
+
+      const type = isEnemyPiece(newX, newY,board,color) ? 'capture' : 'move';
+      movements.push({ x: newX, y: newY, type });
+    }
+
+    return movements;
+  };
