@@ -59,6 +59,70 @@ function ChessBoard ({ username }) {
     });
 };
 
+const handleSelectPiece = (position, moves, piece) => {
+
+  if (!piece || piece.color !== turn) return; 
+  setSelectedPosition(position);
+  setValidMoves(moves || []);
+};
+
+const handleAITurn = () => {
+  const boardState = getBoardState();
+  const aiMove = makeRandomMove(boardState, "blue"); 
+
+  if (!aiMove) return;
+
+  const fromKey = coordKey(aiMove.from.x, aiMove.from.y);
+  const toKey = coordKey(aiMove.to.x, aiMove.to.y);
+  const movingPiece = pieces[fromKey];
+
+  if (!movingPiece || !movingPiece.startsWith("blue-")) return;
+
+  setPieces(prev => {
+    const updated = { ...prev };
+    updated[toKey] = updated[fromKey];
+    delete updated[fromKey];
+    return updated;
+  });
+
+  setSelectedPosition(null);
+  setValidMoves([]);
+  setTurn("white");
+};
+
+
+  const handleMovePiece = (targetCoords) => {
+    if (!selectedPosition) return;
+
+    const updatedPieces = { ...pieces };
+    const fromKey = coordKey(selectedPosition.x, selectedPosition.y);
+    const toKey = coordKey(targetCoords.x, targetCoords.y);
+
+    const movingPiece = updatedPieces[fromKey];
+    updatedPieces[toKey] = movingPiece;
+    delete updatedPieces[fromKey];
+
+    setPieces(updatedPieces);
+    setSelectedPosition(null);
+    setValidMoves([]);
+    setTurn("blue"); 
+
+  setTimeout(() => {
+  handleAITurn(); 
+  }, 500);
+  };
+
+  const handleTileClick = (coords) => {
+
+    if (turn !== "white") return;
+    if (!selectedPosition || !validMoves.length) return;
+
+    const validMove = validMoves.find(move => move.x === coords.x && move.y === coords.y);
+    if (validMove) {
+      handleMovePiece(coords, validMove.type);
+    }
+  };
+
 
     // function to render the pieces on the board
 
