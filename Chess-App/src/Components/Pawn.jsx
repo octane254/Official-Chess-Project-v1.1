@@ -47,6 +47,24 @@ function Pawn({ position, isSelected, onSelect, board, color }) {
 
     return movements;
   };
+
+  const handleSelect = () => {
+    const moves = calculateValidMoves();
+    onSelect(isSelected ? null : position, isSelected ? [] : moves);
+  };
+
+  return (
+    <div
+      className={`chessPiece pawn-piece ${color} ${isSelected ? 'selected' : ''}`}
+      onClick={handleSelect}
+    >
+      <img
+        src={color === 'white' ? whitePawn : bluePawn}
+        alt={`${color} pawn`}
+        style={{ width: '70px', height: '70px', pointerEvents: 'none' }}
+      />
+    </div>
+  );
 }
 
 export default Pawn;
