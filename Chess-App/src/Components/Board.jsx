@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react"
 import ChessPieces from "./Chess-Piece"
 import "../Css/Board.css"
+import { makeRandomMove } from "./Ai";
 
 function ChessBoard ({ username }) {
     
     const [pieces, setPieces] =useState({}) // initial state is an empty object
+    const [selectedPosition, setSelectedPosition] = useState(null);
+    const [validMoves, setValidMoves] = useState([]);
+    const [turn, setTurn] = useState("white");
+
+
 
     // changed how the board is recieving data from the components 
     const coordKey = (x, y) => `${x},${y}`;
@@ -42,6 +48,16 @@ function ChessBoard ({ username }) {
 
     setPieces(initialPieces);
   }, []);
+
+  const getBoardState = () => {
+  return Object.entries(pieces)
+    .filter(([key, value]) => value && typeof value === "string" && value.includes("-"))
+    .map(([key, value]) => {
+      const [x, y] = key.split(",").map(Number);
+      const [color, type] = value.split("-");
+      return { x, y, color, type };
+    });
+};
 
 
     // function to render the pieces on the board
