@@ -16,6 +16,28 @@ function scoreMove(move, board) {
   return scorePoint[target.type] || 0;
 }
 
+export const getAllPossibleMoves = (board, color) => {
+  const moves = [];
+
+  board.forEach(piece => {
+    if (!piece || piece.color !== color || !piece.type) return;
+
+    const validMoves = generateValidMoves(piece, board, color);
+
+    validMoves.forEach(move => {
+      const target = board.find(p => p.x === move.x && p.y === move.y);
+      if (target && target.color === piece.color) return;
+
+      moves.push({
+        from: { x: piece.x, y: piece.y },
+        to: move
+      });
+    });
+  });
+
+  return moves;
+};
+
 export const makeRandomMove = (board, color) => {
   const allMoves = getAllPossibleMoves(board, color).filter(move => {
     const piece = board.find(p => p.x === move.from.x && p.y === move.from.y);

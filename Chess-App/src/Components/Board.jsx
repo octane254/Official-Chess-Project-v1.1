@@ -1,119 +1,227 @@
 import { useEffect, useState } from "react"
 import ChessPieces from "./Chess-Piece"
 import "../Css/Board.css"
+import { makeRandomMove } from "./Ai";
+import compBackground from "../assets/jason-leung-1DjbGRDh7-E-unsplash.jpg"
+import playerBackground from "../assets/mesh-9iY3Sqr1UWY-unsplash.jpg";
 
 function ChessBoard ({ username }) {
     
-    // Arrays for the files and ranks in chess
+    const [pieces, setPieces] =useState({}) // initial state is an empty object
+    const [selectedPosition, setSelectedPosition] = useState(null);
+    const [validMoves, setValidMoves] = useState([]);
+    const [turn, setTurn] = useState("white");
+
+
+
+    // changed how the board is recieving data from the components 
+    const coordKey = (x, y) => `${x},${y}`;
+
+
+
     
-    const rows = [8,7,6,5,4,3,2,1]
 
-    const columns =["a","b","c","d","e","f","g","h"]
+   useEffect(() => {
+    
+    const initialPieces = {};
+    const backRow = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"];
 
-    const [pieces, setPieces] =useState({}) // initial state is an empty object 
-
-
-    // for positioning the the pieces in the board 
-
-    useEffect(()=>{
-
-        // an empty object to store the pieces
-
-        const initialPieces = {}
-        const backRow=["rook","knight","bishop","queen","king","bishop", "knight","rook"]  // An array to organise the 8th and 1st ranks
+    // Blue side
+    for (let x = 0; x < 8; x++) {
 
 
-        // create a loop to place blue pieces in their required tiles  
+      initialPieces[coordKey(x, 7)] = `blue-${backRow[x]}`;
+      initialPieces[coordKey(x, 6)] = "blue-pawn";
 
-        columns.forEach((col,i) => {
+    }
 
-            initialPieces[`${col}8`] = `blue-${backRow[i]}`
-            initialPieces[`${col}7`] = `blue-pawn`
-
-
-        })
-        
-            // create a loop to place white pieces in their required tiles  
-
-        columns.forEach((col,i) => {
-
-            initialPieces[`${col}1`] = `white-${backRow[i]}`
-            initialPieces[`${col}2`] = `white-pawn`
+    // White side
+    for (let x = 0; x < 8; x++) {
 
 
-        })     
-        
-        setPieces(initialPieces)
+      initialPieces[coordKey(x, 0)] = `white-${backRow[x]}`;
+      initialPieces[coordKey(x, 1)] = "white-pawn";
 
-    },[])
+    }
+
+
+
+
+
+    setPieces(initialPieces);
+  }, []);
+
+  const getBoardState = () => {
+  return Object.entries(pieces)
+    .filter(([key, value]) => value && typeof value === "string" && value.includes("-"))
+    .map(([key, value]) => {
+      const [x, y] = key.split(",").map(Number);
+      const [color, type] = value.split("-");
+      return { x, y, color, type };
+    });
+};
+
+const handleSelectPiece = (position, moves) => {
+  if (!position) {
+    setSelectedPosition(null);
+    setValidMoves([]);
+    return;
+  }
+
+  // Lookup actual piece color from board
+  const fromKey = coordKey(position.x, position.y);
+  const rawPiece = pieces[fromKey];
+  const [color] = rawPiece ? rawPiece.split("-") : [];
+
+  if (color !== turn) return;
+
+  setSelectedPosition(position);
+  setValidMoves(moves || []);
+};
+
+const handleAITurn = () => {
+  const boardState = getBoardState();
+  const aiMove = makeRandomMove(boardState, "blue"); 
+
+  if (!aiMove) return;
+
+  const fromKey = coordKey(aiMove.from.x, aiMove.from.y);
+  const toKey = coordKey(aiMove.to.x, aiMove.to.y);
+  const movingPiece = pieces[fromKey];
+
+  if (!movingPiece || !movingPiece.startsWith("blue-")) return;
+
+  setPieces(prev => {
+    const updated = { ...prev };
+    updated[toKey] = updated[fromKey];
+    delete updated[fromKey];
+    return updated;
+  });
+
+  setSelectedPosition(null);
+  setValidMoves([]);
+  setTurn("white");
+};
+
+
+  const handleMovePiece = (targetCoords) => {
+    if (!selectedPosition) return;
+
+    const updatedPieces = { ...pieces };
+    const fromKey = coordKey(selectedPosition.x, selectedPosition.y);
+    const toKey = coordKey(targetCoords.x, targetCoords.y);
+
+    const movingPiece = updatedPieces[fromKey];
+    updatedPieces[toKey] = movingPiece;
+    delete updatedPieces[fromKey];
+
+    setPieces(updatedPieces);
+    setSelectedPosition(null);
+    setValidMoves([]);
+    setTurn("blue"); 
+
+  setTimeout(() => {
+  handleAITurn(); 
+  }, 500);
+  };
+
+  const handleTileClick = (coords) => {
+
+    if (turn !== "white") return;
+    if (!selectedPosition || !validMoves.length) return;
+
+    const validMove = validMoves.find(move => move.x === coords.x && move.y === coords.y);
+    if (validMove) {
+      handleMovePiece(coords, validMove.type);
+    }
+  };
+
+
+   const boardState = getBoardState();
+
 
     // function to render the pieces on the board
 
-    const renderpieces = ()=>{
+  const renderBoard = () => {
 
-    
 
-    let board = []
+    const board = [];
 
-    // Loop to generate the tiles
-    
-    for (let i=0; i<rows.length; i++){
-        for(let j=0; j<columns.length; j++){
 
-            
-            const tilecolors = (i+j)%2
-            const position = `${columns[j]}${rows[i]}`
-            
-            // store tileclass variable as undifined to allow the tiles for it to change color with specified validation 
+    for (let y = 7; y >= 0; y--) {
 
-            let tileclass;
+      for (let x = 0; x < 8; x++) {
 
-            if(tilecolors === 0){
+        const key = coordKey(x, y);
 
-                tileclass = "white-color" 
-            }
-            else{
+        const tileColor = (x + y) % 2 === 0 ? "white-tiles" : "blue-tiles";
 
-                tileclass = "blue-color"  
-            }
+        const isSelectedTile = selectedPosition && selectedPosition.x === x && selectedPosition.y === y;
 
-            // Add Tiles to the board 
 
-            board.push(
+        const hasValidMove = validMoves.some(move => move.x === x && move.y === y);
 
-                <div
+        const moveType = hasValidMove
 
-                key={position}
-                className={`tile ${tileclass}`}
+          ? validMoves.find(move => move.x === x && move.y === y)?.type
+          : null;
 
-                >
-                    <ChessPieces piece={pieces[position]} />                    
+        board.push(
+          <div
+            key={key}
+            className={`tiles ${tileColor} ${hasValidMove ? "valid-move" : ""} ${isSelectedTile ? "selected-tile" : ""}`}
 
-                <div className="coordinates">[{position}]</div>
+            onClick={() => handleTileClick({ x, y })}
+          >
+            <ChessPieces
 
-                </div>
-
-            )
-
-        }
+              piece={pieces[key]}
+              position={{ x, y }}
+              board={boardState}
+              selectedPosition={selectedPosition}
+              validMoves={validMoves}
+              onSelect={handleSelectPiece}
+              onMove={handleMovePiece}
+            />
+            {hasValidMove && <div className={`move-indicator ${moveType}`} />}
+            <div className="coordinates">[{x},{y}]</div>
+          </div>
+        );
+      }
     }
 
-        return board
-}
-        return (
+    return board;
+  };
 
-            <div className="chessboard-container" style={{ display: "flex" }}>
-                <div className="welcome-message" style={{ marginRight: "20px", fontSize: "18px", fontWeight: "bold", alignSelf: "flex-start" }}>
-                    Welcome, {username}!
-                </div>
-                <div className="chessboard">
-                    {renderpieces()}
-                </div>
-            </div>
-        )
+  return (
 
 
+ <div className="game-container">
 
+  <div className="player-label top-player">
+
+     <img src={compBackground} alt="Computer" className="player-icon" />
+
+    <span className="player-tag">Player 2 (Computer)</span>
+    
+    </div>
+
+  
+  <div className="chessboard">
+    {renderBoard()}
+  </div>
+
+  
+  <div className="player-label bottom-player">
+
+    <img src={playerBackground} alt="Computer" className="player-icon" />
+
+    <span className="player-tag">player 1 (you)</span>
+    
+    </div>
+
+</div>
+  )
 }
 
 export default ChessBoard

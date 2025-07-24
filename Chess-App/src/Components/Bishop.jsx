@@ -1,4 +1,4 @@
-import whiteBishop from '../assets/wb.png';
+import whiteBishop from '../assets/wb .png';
 import blueBishop from '../assets/bb.png';
 
 function Bishop({ position, isSelected, onSelect, board, color }) {

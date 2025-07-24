@@ -1,51 +1,44 @@
-import ChessBoard from "./Board";
-import whitePawn from '../assets/wp (1).png';
-import whiteKnight from '../assets/wn (1).png';
-import whiteQueen from '../assets/wq (1).png';
-import whiteBishop from '../assets/wb (1).png';
-import whiteRook from '../assets/wr (1).png';
-import whiteKing from '../assets/wk (1).png';
-import bluePawn from '../assets/bp (1).png';
-import blueKnight from "../assets/bn (1).png";
-import blueQueen from '../assets/bq (1).png';
-import blueBishop from '../assets/bb (1).png';
-import blueRook from '../assets/br (1).png';
-import blueKing from '../assets/bk (1).png';
+import Pawn  from "./Pawn";
+import Rook from "./Rook";
+import knight from "./knight";
+import Bishop from "./Bishop";
+import Queen from "./Queen";
+import King from "./King";
 
-// Adding pieces as a prop
+const pieceComponents = {
+  pawn: Pawn,
+  rook: Rook,
+  knight:knight,
+  bishop: Bishop,
+  queen: Queen,
+  king: King
+};
 
-function ChessPieces ({piece}){
+function AddingPieces({ piece, position, board, selectedPosition, validMoves, onSelect, onMove }) {
+  if (!piece) return null;
 
-    // store all the images in an object 
+  const { x, y } = position;
+  const [color, type] = piece.split("-");
 
-    const pieceImages={
-        "white-pawn": whitePawn,
-        "white-knight": whiteKnight,
-        "white-queen":whiteQueen,
-        "white-bishop":whiteBishop,
-        "white-rook":whiteRook,
-        "white-king":whiteKing ,
-        "blue-pawn":bluePawn,
-        "blue-knight":blueKnight,
-        "blue-queen":blueQueen,
-        "blue-bishop":blueBishop,
-        "blue-rook":blueRook,
-        "blue-king":blueKing ,
+  const isSelected =
+    selectedPosition &&
+    selectedPosition.x === x &&
+    selectedPosition.y === y;
 
-    }
+  const Component = pieceComponents[type];
+  if (!Component) return null;
 
-    return (
-        
-        piece && <img
-
-        src={pieceImages[piece]}
-        alt={piece}
-        className="imagePiece" 
-        
-        />
-    )
-
-
+  return (
+    
+    <Component
+      position={{ x, y }}
+      board={board}
+      color={color}
+      isSelected={isSelected}
+      onSelect={onSelect}
+      onMove={onMove}
+    />
+  );
 }
 
-export default ChessPieces
+export default AddingPieces
