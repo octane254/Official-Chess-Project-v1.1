@@ -302,3 +302,70 @@ export const calculateValidBishopMoves = (position,board,color) => {
 
     return movements;
   };
+
+  export const calculateValidRookMoves = (position,board,color) => {
+    const movements = [];
+    const x = position.x;
+    const y = position.y;
+
+    // Move right
+    for (let i = 1; i < 8; i++) {
+      const newX = x + i;
+      const newY = y;
+      if (!isOnBoard(newX, newY)) break;
+      if (isFriendlyPiece(newX, newY, board, color)) break;
+      if (isSquareEmpty(newX, newY,board)) {
+        movements.push({ x: newX, y: newY, type: 'move' });
+      } else if (isEnemyPiece(newX, newY,board,color)) {
+        movements.push({ x: newX, y: newY, type: 'capture' });
+        break;
+      } else break;
+    }
+
+    // Move left
+    for (let i = 1; i < 8; i++) {
+      const newX = x - i;
+      const newY = y;
+      if (!isOnBoard(newX, newY)) break;
+      if (isFriendlyPiece(newX, newY, board, color)) break;
+
+      if (isSquareEmpty(newX, newY,board)) {
+        movements.push({ x: newX, y: newY, type: 'move' });
+      } else if (isEnemyPiece(newX, newY,board,color)) {
+        movements.push({ x: newX, y: newY, type: 'capture' });
+        break;
+      } else break;
+    }
+
+    // Move up
+    for (let i = 1; i < 8; i++) {
+      const newX = x;
+      const newY = y - i;
+      if (!isOnBoard(newX, newY)) break;
+      if (isFriendlyPiece(newX, newY, board, color)) break;
+
+      if (isSquareEmpty(newX, newY,board)) {
+        movements.push({ x: newX, y: newY, type: 'move' });
+      } else if (isEnemyPiece(newX, newY,board,color)) {
+        movements.push({ x: newX, y: newY, type: 'capture' });
+        break;
+      } else break;
+    }
+
+    // Move down
+    for (let i = 1; i < 8; i++) {
+      const newX = x;
+      const newY = y + i;
+      if (!isOnBoard(newX, newY)) break;
+      if (isFriendlyPiece(newX, newY, board, color)) break;
+
+      if (isSquareEmpty(newX, newY,board)) {
+        movements.push({ x: newX, y: newY, type: 'move' });
+      } else if (isEnemyPiece(newX, newY,board,color)) {
+        movements.push({ x: newX, y: newY, type: 'capture' });
+        break;
+      } else break;
+    }
+
+    return movements;
+  };
