@@ -15,6 +15,28 @@ function King({ position, isSelected, onSelect, board, color }) {
     return piece && piece.color !== color;
   };
 
+   const calculateValidMoves = () => {
+    const movements = [];
+    const x = position.x;
+    const y = position.y;
+
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        if (dx === 0 && dy === 0) continue;
+
+        const newX = x + dx;
+        const newY = y + dy;
+
+        if (!isOnBoard(newX, newY)) continue;
+        if (isFriendlyPiece(newX, newY)) continue;
+
+        const type = isEnemyPiece(newX, newY) ? 'capture' : 'move';
+        movements.push({ x: newX, y: newY, type });
+      }
+    }
+
+    return movements;
+  };
   
 }
 
