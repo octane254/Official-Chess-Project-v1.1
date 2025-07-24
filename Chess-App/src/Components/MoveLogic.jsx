@@ -369,3 +369,12 @@ export const calculateValidBishopMoves = (position,board,color) => {
 
     return movements;
   };
+
+  const pieceLogicMap = {
+  pawn: calculateValidPawnMoves,
+  rook: calculateValidRookMoves,
+  knight: calculateValidKnightMoves,
+  bishop: calculateValidBishopMoves,
+  queen: calculateValidQueenMoves,
+  king: calculateValidKingMoves,
+};
