@@ -37,7 +37,32 @@ function King({ position, isSelected, onSelect, board, color }) {
 
     return movements;
   };
-  
+
+    const handleSelect = () => {
+    if (isSelected) {
+      onSelect(null, []);
+    } else {
+      const moves = calculateValidMoves();
+      onSelect(position, moves);
+    }
+  };
+
+  return (
+    <div
+      className={`chessPiece king-piece ${color} ${isSelected ? 'selected' : ''}`}
+      onClick={handleSelect}
+    >
+      <img
+        src={color === 'white' ? whiteKing : blueKing}
+        alt={`${color} king`}
+        style={{
+          width: '70px',
+          height: '70px',
+          pointerEvents: 'none'
+        }}
+      />
+    </div>
+  );
 }
 
 export default King;
