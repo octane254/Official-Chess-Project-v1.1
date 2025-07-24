@@ -1,2 +1,2 @@
-import blueQueen from '../assets/bq.png';
-import whiteQueen from '../assets/wq.png';
+import blueRook from '../assets/br.png';
+import whiteRook from '../assets/wr.png';
