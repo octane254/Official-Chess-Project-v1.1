@@ -14,3 +14,10 @@ const isSquareEmpty = (x, y, board) => {
   if (!Array.isArray(board)) return false;
   return board.every(p => p.x !== x || p.y !== y);
 };
+
+export const generateValidMoves = (piece, board,color) => {
+  const position = { x: piece.x, y: piece.y };
+    if (piece.color !== color) return [];
+  const logicFunction = pieceLogicMap[piece.type];
+  return logicFunction ? logicFunction(position, board, color) : [];
+};
