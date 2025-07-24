@@ -33,3 +33,8 @@ export const makeRandomMove = (board, color) => {
   const topMoves = scoredMoves
     .sort((a, b) => b.score - a.score)
     .slice(0, 5);
+
+      const randomIndex = Math.floor(Math.random() * topMoves.length);
+  console.log(randomIndex)
+  return topMoves[randomIndex];
+};
